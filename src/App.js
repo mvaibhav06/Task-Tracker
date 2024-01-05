@@ -1,23 +1,26 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import Navbar from "./Navbar";
+import axios from "axios";
+import Todo from "./Todo";
+import { useState, useEffect } from "react";
 
 function App() {
+  const [tasks, setTasks] = useState([]);
+
+  const fetchData = async () => {
+    const response = await axios.get("http://localhost:8080/api/tasks");
+    setTasks(response.data);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [tasks]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Navbar />
+      <Todo tasks={tasks} />
+      {tasks.length === 0 ? <p className="text-center">Nothing to do</p> : ""}
     </div>
   );
 }
